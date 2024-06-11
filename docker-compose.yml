@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+  
+  api:
+    build: crud_app/
+    container_name: express-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./crud_app:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
+    driver: local
+
+# mongodb://admin:password@mongodb:27017/
