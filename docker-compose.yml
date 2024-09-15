@@ -16,9 +16,8 @@ services:
     container_name: express-api
     ports:
       - "3000:3000"
-    volumes:
-      - ./app:/app
-      - /app/node_modules
+    # volumes:
+    #   - ./app:/app
     env_file:
       - ./app/.env
     command: npm run dev
