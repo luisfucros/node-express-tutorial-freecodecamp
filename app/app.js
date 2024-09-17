@@ -11,15 +11,15 @@ require("dotenv").config();
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
+app.get("/", (req, res) => {
+  res.json({status: 'ok'})
+});
+
 // routes
 app.use("/api/v1/products", productRoute)
 
 app.use(notFound);
 app.use(errorHandlerMiddleware)
-
-app.get("/", (req, res) => {
-  res.json({status: 'ok'})
-});
 
 const port = process.env.PORT || 3000
 
