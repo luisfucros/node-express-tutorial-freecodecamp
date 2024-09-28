@@ -1,8 +1,7 @@
-const Product = require("../models/product.model")
-const asyncWrapper = require('../middleware/async')
-const { createCustomError } = require('../errors/custom-error')
+const Product = require('../models/product.model')
+const { CustomError } = require('../errors/custom-error')
 
-const getProducts = asyncWrapper(async (req, res) => {
+const getProducts = async (req, res) => {
   const { featured, company, name, sort, fields, numericFilters } = req.query;
   const queryObject = {};
 
@@ -58,47 +57,47 @@ const getProducts = asyncWrapper(async (req, res) => {
 
   const products = await result;
   res.status(200).json({ products, nbHits: products.length });
-})
+}
 
-const getProduct = asyncWrapper(async (req, res, next) => {
+const getProduct = async (req, res, next) => {
 
     const { id } = req.params;
     const product = await Product.findById(id)
     if (!product) {
-      return next(createCustomError(`No product with id : ${id}`, 404))
+      throw new CustomError(`No product with id : ${id}`)
     }
     res.status(200).json(product)
 
-});
+}
 
-const createProduct = asyncWrapper(async (req, res) => {
+const createProduct = async (req, res) => {
     const product = await Product.create(req.body)
     res.status(200).json(product);
-})
+}
 
-const updateProduct = asyncWrapper(async (req, res, next) => {
+const updateProduct = async (req, res, next) => {
     const { id } = req.params;
 
     const product = await Product.findByIdAndUpdate(id, req.body)
 
     if (!product) {
-      return next(createCustomError(`No product with id : ${id}`, 404))
+      throw new CustomError(`No product with id : ${id}`)
     }
 
     const updatedProduct = await Product.findById(id)
     res.status(200).json(updatedProduct);
-})
+}
 
-const deleteProduct = asyncWrapper(async (req, res, next) => {
+const deleteProduct = async (req, res, next) => {
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
 
     if (!product) {
-      return next(createCustomError(`No product with id : ${id}`, 404))
+      throw new CustomError(`No product with id : ${id}`)
     }
 
     res.status(200).json({ message: "Product deleted successfully" })
-})
+}
 
 module.exports = {
   getProducts,
