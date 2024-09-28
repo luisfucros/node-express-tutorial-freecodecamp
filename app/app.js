@@ -1,5 +1,7 @@
 const express = require("express");
+require('express-async-errors');
 const productRoute = require("./routes/product.route.js");
+const authRouter = require('./routes/auth.route.js');
 const connectDB = require("./db/connect.js");
 const app = express();
 const notFound = require('./middleware/not-found.js')
@@ -16,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 // routes
+app.use('/api/v1/auth', authRouter);
 app.use("/api/v1/products", productRoute)
 
 app.use(notFound);
