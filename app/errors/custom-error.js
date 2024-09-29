@@ -4,12 +4,12 @@ class CustomAPIError extends Error {
     }
   }
   
-class CustomError extends CustomAPIError {
+class NotFoundError extends CustomAPIError {
     constructor(message) {
       super(message)
       this.statusCode = 404
     }
   }
   
-  module.exports = { CustomError, CustomAPIError }
+  module.exports = { NotFoundError, CustomAPIError }
   

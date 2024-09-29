@@ -1,5 +1,5 @@
 const Product = require('../models/product.model')
-const { CustomError } = require('../errors/custom-error')
+const { NotFoundError } = require('../errors/custom-error')
 
 const getProducts = async (req, res) => {
   const { featured, company, name, sort, fields, numericFilters } = req.query;
@@ -56,6 +56,7 @@ const getProducts = async (req, res) => {
   result = result.skip(skip).limit(limit);
 
   const products = await result;
+
   res.status(200).json({ products, nbHits: products.length });
 }
 
@@ -64,7 +65,7 @@ const getProduct = async (req, res, next) => {
     const { id } = req.params;
     const product = await Product.findById(id)
     if (!product) {
-      throw new CustomError(`No product with id : ${id}`)
+      throw new NotFoundError(`No product with id : ${id}`)
     }
     res.status(200).json(product)
 
@@ -81,7 +82,7 @@ const updateProduct = async (req, res, next) => {
     const product = await Product.findByIdAndUpdate(id, req.body)
 
     if (!product) {
-      throw new CustomError(`No product with id : ${id}`)
+      throw new NotFoundError(`No product with id : ${id}`)
     }
 
     const updatedProduct = await Product.findById(id)
@@ -93,7 +94,7 @@ const deleteProduct = async (req, res, next) => {
     const product = await Product.findByIdAndDelete(id);
 
     if (!product) {
-      throw new CustomError(`No product with id : ${id}`)
+      throw new NotFoundError(`No product with id : ${id}`)
     }
 
     res.status(200).json({ message: "Product deleted successfully" })
